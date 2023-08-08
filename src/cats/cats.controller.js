@@ -1,4 +1,4 @@
-import { Bind, Controller, Get, Param, Res, HttpStatus } from '@nestjs/common';
+import { Bind, Controller, Get, Param, Res, HttpStatus, Delete,Post,Body} from '@nestjs/common';
 
 const gatos = [
     {
@@ -40,6 +40,21 @@ export class CatsController {
 
         }
     }
+    @Delete(':id')
+    @Bind(Param('id'), Res())
+    remove(id, res) {
+        const indexGatoEncontrado = gatos.findIndex(gato => gato.id == id);
+        if(indexGatoEncontrado >= 0){
+            gatos.splice(indexGatoEncontrado, 1);
+            res.status(HttpStatus.NO_CONTENT).send();
+        } else {
+            res.status(HttpStatus.NOT_FOUND).send();
+        }
+    }
 
-    
+    @Post()
+    @Bind(Body())
+    create(cat) {
+        return `Cadastrando um gato ${JSON.stringify(cat)}`
+    }
 }
