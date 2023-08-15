@@ -28,4 +28,8 @@ deleteByIndex(index) {
 this.cats.splice(index, 1);
 }
 
+updateByIndex(index,cat){
+this.cats.splice(index,1,cat);
+}
+
 }
