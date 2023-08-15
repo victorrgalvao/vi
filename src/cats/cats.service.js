@@ -4,7 +4,16 @@ import { Injectable } from '@nestjs/common';
 export class CatsService {
 constructor() {
     this.cats = [];
-};
+}
 
+
+findAll() {
+    return this.cats;
+}
+
+create(cat) {
+this.cats.push(cat);
+
+}
 
 }
