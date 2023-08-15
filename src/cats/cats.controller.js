@@ -1,51 +1,52 @@
-import { Bind, Controller, Get, Param, Res, HttpStatus, Delete,Post,Body,Put} from '@nestjs/common';
+import { Bind, Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Res } from '@nestjs/common';
 
-const gatos = [
+const GATOS = [
     {
         id: 1,
-        nome: "raposo",
-        corOlhos: "azul",
-        raca: "persa"
+        nome: "Franeudos",
+        corOlhos: "verde",
+        raca: "sphynx"
     },
     {
         id: 2,
-        nome: "dora",
+        nome: "Chico",
         corOlhos: "azul",
-        raca: "angora"
+        raca: "siamês"
     },
     {
         id: 3,
-        nome: "iceberg",
-        corOlhos: "verde",
-        raca: "simames"
+        nome: "Chambaril",
+        corOlhos: "preto",
+        raca: "munchkin"
     }
-]
+];
 
 @Controller('cats')
 export class CatsController {
+
     @Get()
     findAll() {
-        return gatos;
+        return GATOS;
     }
 
     @Get(':id')
     @Bind(Param(), Res())
     findOne(params, res) {
-        const CatData = gatos.find(gato => gato.id == Number(params.id));
-       
-        if (CatData) {
-            res.status(HttpStatus.OK).json(CatData);
+        const gatoEncontrado = GATOS.find(gato => gato.id == params.id);
+        if(gatoEncontrado) {
+            res.status(HttpStatus.OK).json(gatoEncontrado);
         } else {
             res.status(HttpStatus.NOT_FOUND).send();
-
         }
+        
     }
+
     @Delete(':id')
     @Bind(Param('id'), Res())
     remove(id, res) {
-        const indexGatoEncontrado = gatos.findIndex(gato => gato.id == id);
+        const indexGatoEncontrado = GATOS.findIndex(gato => gato.id == id);
         if(indexGatoEncontrado >= 0){
-            gatos.splice(indexGatoEncontrado, 1);
+            GATOS.splice(indexGatoEncontrado, 1);
             res.status(HttpStatus.NO_CONTENT).send();
         } else {
             res.status(HttpStatus.NOT_FOUND).send();
@@ -53,16 +54,24 @@ export class CatsController {
     }
 
     @Post()
-    @Bind(Body(),Res())
-    create(cat,res) {
-      gatos.push(cat);
+    @Bind(Body(), Res())
+    create(cat, res) {
+        GATOS.push(cat);
+        res.status(HttpStatus.CREATED).json(cat);
+    }
 
-res.status(HttpStatus.CREATED).json(cat)
+    @Put(':id')
+    @Bind(Param('id'), Body(), Res())
+    update(id, cat,res) {
+        const indexGatoEncontrado = GATOS.findIndex(gato => gato.id == id);
+        if(indexGatoEncontrado >= 0){
+            GATOS.splice(indexGatoEncontrado, 1,cat);
+            res.status(HttpStatus.NO_CONTENT).send();
+        } else {
+            res.status(HttpStatus.NOT_FOUND).send();
+        }
+        
         
     }
-@Put(':id')
-   @Bind(Param('id'), Body())
-   update(id,cat){
-    return `att o gato com o ${id} e valores ${JSON.stringify(cat)}`
-   }
+
 }
